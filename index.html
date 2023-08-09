@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue JS 3 Ticket Booking App</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="vue.global.js"></script>
+  </head>
+  <body>
+    <header>
+      <h2>Ticket Booking App</h2>
+    </header>
+
+    <div id="app">
+      <!-- title -->
+      <!-- <h1 class="app-title">Ticket Booking App</h1> -->
+      <div class="ticket-app">
+        <!-- ticket app top -->
+        <div class="ticket-app__top">
+          <div class="seat-states">
+            <div class="seat-state" v-for="(value, key) in seatStates">
+              <div
+                class="seat-state__color"
+                :style="{backgroundColor: value.color}"
+              ></div>
+              <div class="seat-state__text">{{ value.text }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ticket app bottom -->
+        <div class="ticket-app__bottom">
+          <!-- ticket-left-->
+          <div class="ticket-app__left">
+            <div class="bus">
+              <!-- Bus top -->
+              <div class="bus__top">
+                <!--Bus door-->
+                <div class="bus__door">Door</div>
+
+                <!--Bus door-->
+                <div class="bus__driver">Driver</div>
+              </div>
+
+              <!-- Bus bottom -->
+              <div class="bus__bottom">
+                <div class="seats">
+                  <div
+                    class="seat"
+                    :class="{
+                      'seat--sold': seat.type === 'sold',
+                      'seat--booked': seat.type === 'booked',
+                      'seat--selected': seat.type === 'selected'
+                      
+                    }"
+                    v-for="(seat, i) in seats"
+                    :key="seat.name"
+                    @click="handleClick(i)"
+                  >
+                    {{seat.name}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ticket-app__right-->
+          <div class="ticket-app__instruction" v-if="selectedSeats.length === 0">
+            No seats selected <br>
+            select some seats first
+          </div>
+          <div class="ticket-app__right" v-else>
+            <!-- cart -->
+            <div class="cart">
+              <strong>Selected Seats</strong>
+              <table class="selected-seats">
+                <thead>
+                  <tr>
+                    <th>Seat</th>
+                    <th>Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(seat, i) in selectedSeats" :key="seat.name">
+                    <td>{{ seat.name }}</td>
+                    <td>Tk. {{ seat.price }}</td>
+                  </tr>
+
+                  <tr>
+                    <th>Total</th>
+                    <th>Tk. {{ totalCosts }}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- coupon -->
+
+              <p>
+                Have a coupon?
+                <input 
+                  type="text"
+                  v-model="couponCode"
+                  placeholder="10 digit coupon">
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
