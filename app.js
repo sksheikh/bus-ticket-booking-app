@@ -1,6 +1,10 @@
 var app = Vue.createApp({
   data() {
     return {
+      // disabled: "",
+      name: "",
+      mobile: "",
+      confirmed: false,
       appliedCoupon: null,
       couponCode: "",
       coupons: [
@@ -165,8 +169,16 @@ var app = Vue.createApp({
       this.selectedSeats.forEach((element) => {
         total += element.price;
       });
+
+      if(this.appliedCoupon !== null) {
+        total -= this.appliedCoupon.discount;
+      }
       return total;
     },
+    isButtonDisabled(){
+      return !this.name || !this.mobile ;
+    }
+   
   },
 
   methods: {
@@ -178,13 +190,36 @@ var app = Vue.createApp({
       }
 
       //more than three cant select
-      if (this.selectedSeats.length > 2) {
+      if (clickSelected.type === 'available' && this.selectedSeats.length > 2) {
         alert("You can not select more than three seats");
         return;
       }
       clickSelected.type = clickSelected.type === "selected" ? "" : "selected";
       // console.log(clickSelected);
     },
+    confirm() {
+      if (!this.name || !this.mobile) {
+        alert("Please enter name and mobile");
+        return;
+      }
+    
+      this.confirmed = true;
+      // this.disabled = false;
+      // console.log(this.confirmed);
+    },
+    resetData() {
+      this.confirmed = false;
+      this.name = "";
+      this.mobile = "";
+      this.appliedCoupon = null;
+    
+      this.seats.forEach((seat) => {
+        if (seat.type === "selected") {
+          seat.type = "sold";
+        }
+      });
+    },
+   
   },
 
   watch: {
@@ -194,8 +229,6 @@ var app = Vue.createApp({
         let searchedCoupons = this.coupons.filter(
           (item) => item.code === newValue
         );
-
-        console.log(searchedCoupons);
     
         if (searchedCoupons.length === 1) {
           this.appliedCoupon = searchedCoupons[0];
@@ -204,7 +237,8 @@ var app = Vue.createApp({
           alert("Coupon not valid!");
         }
       }
-    }
+    },
+    
   },
 });
 

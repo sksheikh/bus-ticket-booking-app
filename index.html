@@ -16,6 +16,50 @@
       <!-- title -->
       <!-- <h1 class="app-title">Ticket Booking App</h1> -->
       <div class="ticket-app">
+        <!-- overlay info -->
+        <div class="confirmed-dialog" v-if="confirmed">
+          <h3>Ticket confirmed!</h3>
+          <hr>
+          <br>
+          <table class="selected-seats">
+            <tr>
+              <th>Passenger Name</th>
+            <td>{{name}}</td>
+            <tr>
+              <th>Passenger Contact</th>
+            <td>{{mobile}}</td>
+            
+            </tr>
+            <tr>
+              <th>Seats:</th>
+              <td>
+                <div v-for="(seat, i) in selectedSeats" :key="seat.name">
+                  <div>
+                    {{seat.name}}
+                  </div>
+        
+                </div>
+              </td>
+        
+              
+            </tr>
+            <tr>
+              <th>Total Cost</th>
+              <td>Tk. {{totalCosts}}</td>
+            </tr>
+        
+          </table>
+        
+          <br>
+        
+          <button
+            class="confirm-button"
+            @click="resetData"
+          >
+            Book Again
+          </button>
+        </div>
+
         <!-- ticket app top -->
         <div class="ticket-app__top">
           <div class="seat-states">
@@ -87,21 +131,43 @@
                     <td>Tk. {{ seat.price }}</td>
                   </tr>
 
+                  <tr v-if="appliedCoupon !== null">
+                    <th>Discount</th>
+                    <th>Tk. -{{ appliedCoupon.discount }}</td>
+                  </tr>
+
                   <tr>
                     <th>Total</th>
                     <th>Tk. {{ totalCosts }}</td>
                   </tr>
                 </tbody>
               </table>
-              <!-- coupon -->
 
-              <p>
+              <!-- coupon -->
+              <p v-if="appliedCoupon === null">
                 Have a coupon?
                 <input 
                   type="text"
                   v-model="couponCode"
                   placeholder="10 digit coupon">
               </p>
+              <p v-else>
+                appliedCoupon : {{ appliedCoupon.code }}
+              </p>
+
+              <!--customer info-->
+              <div class="info">
+                <input type="text" placeholder="Name" v-model="name" />
+                <input type="text" placeholder="Mobile" v-model="mobile" />
+              </div>
+              
+              <button
+                class="confirm-button"
+                @click="confirm"
+                :disabled="isButtonDisabled"
+              >
+                Confirm
+              </button>
             </div>
           </div>
         </div>
